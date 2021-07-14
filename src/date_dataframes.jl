@@ -13,7 +13,7 @@ struct DateDataFrame{TT <: Union{AbstractVector{DateTime}, DateTime}, DT <: Unio
 end
 
 function show_timestamp(ts::AbstractVector{DateTime})
-    return "time span=> $(ts[1])->$(ts[end])"
+    return "$time::$(typeof(ts)) span=> $(ts[1])->$(ts[end])"
 end
 
 function show_timestamp(ts::DateTime)
@@ -28,7 +28,7 @@ end
 
 function Base.getindex(ddf::DateDataFrame, row_idx, col_idx)
     t_idx = translate_idx(ddf.timestamp, row_idx)
-    @show t_idx
+    # @show t_idx
     df = ddf.df[t_idx, col_idx]
     # timstamp = ddf.timestamp[t_idx]
     timestamp = translate_timestamp(ddf.timestamp, t_idx)
@@ -66,8 +66,10 @@ end
 
 function translate_idx(ts::StepRange{DateTime, <:Any}, dt::DateTime)
     d = dt - ts.start
-    if d % ts.step == 0 
-        idx = d ÷ ts.step + 1
+    step = typeof(d)(ts.step)
+    # @show ts ts.start d ts.step typeof(d)(ts.step) (d % typeof(d)(ts.step))
+    if d % step == zero(typeof(d))
+        idx = d ÷ step + 1
         return idx
     end
     error("DateTime $dt is not in index")
