@@ -1,13 +1,13 @@
 
 timestamp(ddf::DateDataFrame) = ddf.timestamp
 
-values(ddf::DateDataFrame) = error("values is removed for DateDataFrame")
+Base.values(ddf::DateDataFrame) = error("values is removed for DateDataFrame")
 
 # `colnames` is removed in favor of `DataFrames.names`
 
 names(ddf::DateDataFrame) = names(ddf.df)
 
-function diff(ddf::DateDataFrame; padding=false)
+function Base.diff(ddf::DateDataFrame; padding=false)
     names_df = names(ddf.df)
     df = ddf.df[2:end, :] .- ddf.df[1:end-1, :]
     if padding
