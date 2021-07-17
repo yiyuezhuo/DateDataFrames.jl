@@ -24,3 +24,13 @@ end
 function ⊘(xv::Vector{<:DateDataFrame}, yv::Vector{<:DateDataFrame})
     return [x ./ y for (x, y) in _iter_xv_yv(xv, yv)]
 end
+
+# \otimes
+function ⊗(xv::Vector{<:DateDataFrame}, yv::Vector{Float64})
+    return [x .* y for (x, y) in zip(xv, yv)]
+end
+
+# \otimes
+function ⊗(xv::Vector{<:DateDataFrame}, y::Float64)
+    return [x .* y for x in xv]
+end

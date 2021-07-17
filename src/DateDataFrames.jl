@@ -12,6 +12,7 @@ using Statistics
 using RecipesBase
 
 include("date_dataframes.jl")
+include("broadcasting.jl")
 include("resample.jl")
 include("misc.jl")
 include("infix_ops.jl")
