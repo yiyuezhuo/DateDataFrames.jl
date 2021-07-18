@@ -1,7 +1,7 @@
 name = "DateDataFrames"
 uuid = "29e7b70a-2656-403a-ac7f-b13d7a27cc98"
 authors = ["yiyuezhuo <yiyuezhuo@gmail.com> and contributors"]
-version = "0.1.5"
+version = "0.1.6"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"

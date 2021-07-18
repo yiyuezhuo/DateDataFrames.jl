@@ -51,5 +51,14 @@ using MarketData
         ddf = ddf .* ddf[!, :b]
 
         @test ddf[1,1] == 0
+
+        ddf_v = ddf[!, :a]
+        ddf_v .= 1
+
+        @test ddf_v[1] == 1
+
+        ddf_v[:] .= 2
+
+        @test ddf_v[1] == 2
     end
 end

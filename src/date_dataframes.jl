@@ -7,12 +7,14 @@ df[1, :] # DataFrameRow
 df[!, :symbol] # Vector{Float64} # pandas.series like
 df[1:2, :] # DataFrame
 """
-const TTT = Union{AbstractVector{DateTime}, DateTime}
+const DateTimeOrVec = Union{AbstractVector{DateTime}, DateTime}
 
-struct DateDataFrame{TT <: TTT, DT <: Union{AbstractDataFrame, DataFrameRow, AbstractVector}}
+struct DateDataFrame{TT <: DateTimeOrVec, DT <: Union{AbstractDataFrame, DataFrameRow, AbstractVector}}
     timestamp::TT
     df::DT
 end
+
+const DateDataFrameVecEnd = DateDataFrame{<:DateTimeOrVec, <:AbstractVector}
 
 function show_timestamp(ts::AbstractVector{DateTime})
     return "$time::$(typeof(ts)) span=> $(ts[1])->$(ts[end])"
@@ -40,9 +42,14 @@ function Base.getindex(ddf::DateDataFrame, row_idx, col_idx)
     return type_translate(timestamp, df)
 end
 
-function Base.getindex(ddf::DateDataFrame{<:TTT, <:AbstractVector}, row_idx)
+function Base.getindex(ddf::DateDataFrameVecEnd, row_idx)
     t_idx = translate_idx(ddf.timestamp, row_idx)
     return DateDataFrame(ddf.timestamp[t_idx], ddf.df[t_idx])
+end
+
+function Base.getindex(ddf::DateDataFrameVecEnd, row_idx::Union{Int, DateTime})
+    t_idx = translate_idx(ddf.timestamp, row_idx)
+    return ddf.df[t_idx]
 end
 
 function Base.setindex!(ddf::DateDataFrame, value, row_idx, col_idx)
@@ -94,7 +101,11 @@ function translate_timestamp(ts::AbstractVector{<:DateTime}, ::typeof(!))
     return ts
 end
 
-
-
 Base.eachcol(ddf::DateDataFrame) = Base.eachcol(ddf.df)
 Base.size(ddf::DateDataFrame, args...) = Base.size(ddf.df, args...)
+
+Base.sum(ddf::DateDataFrameVecEnd) = sum(ddf.df)
+Base.first(ddf::DateDataFrame, row_idx=1:1) = ddf[row_idx, :]
+Base.first(ddf::DateDataFrameVecEnd, row_idx=1:1) = ddf[row_idx]
+
+# While it's possible to implement `iterate` interface for DateTimeOrVec, I don't do it to capture other errors easily.
