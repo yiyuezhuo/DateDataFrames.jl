@@ -45,5 +45,6 @@ function Base.materialize(bc::Base.Broadcast.Broadcasted{<:Base.Broadcast.Defaul
 end
 
 function Base.dotview(ddf::DateDataFrame, row_idx)
-    return DateDataFrame((@view ddf.timestamp[row_idx]), (@view ddf.df[row_idx]))
+    t_idx = translate_idx(ddf.timestamp, row_idx)
+    return DateDataFrame((@view ddf.timestamp[t_idx]), (@view ddf.df[t_idx]))
 end

@@ -24,8 +24,8 @@ function lead(ddf::DateDataFrame)
     return DateDataFrame(ddf.timestamp[1:end-1], ddf.df[2:end, :])
 end
 
-rename(ddf::DateDataFrame) = rename(ddf.df)
-rename!(ddf::DateDataFrame) = rename!(ddf.df)
+rename(ddf::DateDataFrame, args...) = rename(ddf.df, args...)
+rename!(ddf::DateDataFrame, args...) = rename!(ddf.df, args...)
 
 function rolling_mean(arr::AbstractVector, n::Int; padding=false)
     ret_length = length(arr) - n + 1

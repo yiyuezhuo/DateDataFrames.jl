@@ -26,11 +26,21 @@ function ⊘(xv::Vector{<:DateDataFrame}, yv::Vector{<:DateDataFrame})
 end
 
 # \otimes
-function ⊗(xv::Vector{<:DateDataFrame}, yv::Vector{Float64})
+function ⊗(xv::Vector{<:DateDataFrame}, yv::Vector{<:Real})
     return [x .* y for (x, y) in zip(xv, yv)]
 end
 
 # \otimes
-function ⊗(xv::Vector{<:DateDataFrame}, y::Float64)
+function ⊗(xv::Vector{<:DateDataFrame}, y::Real)
     return [x .* y for x in xv]
+end
+
+# \oslash
+function ⊘(xv::Vector{<:DateDataFrame}, yv::Vector{<:Real})
+    return [x ./ y for (x, y) in zip(xv, yv)]
+end
+
+# \oslash
+function ⊘(xv::Vector{<:DateDataFrame}, y::Real)
+    return [x ./ y for x in xv]
 end

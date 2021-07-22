@@ -109,3 +109,23 @@ Base.first(ddf::DateDataFrame, row_idx=1:1) = ddf[row_idx, :]
 Base.first(ddf::DateDataFrameVecEnd, row_idx=1:1) = ddf[row_idx]
 
 # While it's possible to implement `iterate` interface for DateTimeOrVec, I don't do it to capture other errors easily.
+
+#=
+Reference:
+https://github.com/JuliaData/DataFrames.jl/blob/main/src/abstractdataframe/abstractdataframe.jl#L400
+=#
+function Base.:(==)(ddf1::DateDataFrame, ddf2::DateDataFrame)
+    return ddf1.timestamp == ddf2.timestamp && ddf1.df == ddf2.df
+end
+
+Base.:(-)(dff::DateDataFrameVecEnd) = DateDataFrame(ddf.timestamp, -ddf.df)
+
+function Base.hcat(ddf1::DateDataFrame, ddf2::DateDataFrame)
+    @assert ddf1.timestamp == ddf2.timestamp
+    return DateDataFrame(ddf1.timestamp, hcat(ddf1.df, ddf2.df))
+end
+
+function Base.vcat(ddf1::DateDataFrame, ddf2::DateDataFrame)
+    @assert ddf1.timestamp[end] <= ddf2.timestamp[begin]
+    return DateDataFrame(vcat(ddf1.timestamp, ddf2.timestamp), vcat(ddf1.df, ddf2.df))
+end
