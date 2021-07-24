@@ -108,6 +108,8 @@ Base.sum(ddf::DateDataFrameVecEnd) = sum(ddf.df)
 Base.first(ddf::DateDataFrame, row_idx=1:1) = ddf[row_idx, :]
 Base.first(ddf::DateDataFrameVecEnd, row_idx=1:1) = ddf[row_idx]
 
+Base.cumsum(ddf::DateDataFrameVecEnd) = DateDataFrame(ddf.timestamp, cumsum(ddf.df))
+
 # While it's possible to implement `iterate` interface for DateTimeOrVec, I don't do it to capture other errors easily.
 
 #=
